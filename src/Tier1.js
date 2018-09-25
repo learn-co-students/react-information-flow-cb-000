@@ -7,12 +7,49 @@ export default class Tier1 extends Component {
 
   constructor(props) {
     super(props)
-    const initialColor = getRandomColor()
+    const [c1, c2, c3] = generateColors()
     this.state = {
-      color: initialColor,
-      childColor: getReducedColor(initialColor)
+      color: c1,
+      childColor: c2,
+      grandchildColor: c3
     }
   }
+
+  generateColors = (count=3) => {
+    const colors = [getRandomColor()]
+    for (idx = 0; idx < count; idx++) {
+      colors.push(getReducedColor(colors[colors.length - 1]))
+    }
+    return colors
+  }
+
+  handleClick = e => {
+    const [c1, c2, c3] = generateColors()
+    e.stopPropagation()
+    this.setState({
+      color: c1,
+      childColor: c2,
+      grandchildColor: c3
+    })
+  }
+
+  handleChildClick = e => {
+    const [c1, c2] = generateColors(2)
+    e.stopPropagation()
+    this.setState({
+      childColor: c2,
+      grandchildColor: c3
+    })
+  }
+
+  handleGrandchildClick = e => {
+    const [c1] = generateColors(1)
+    e.stopPropagation()
+    this.setState({
+      grandchildColor: c3
+    })
+  }
+
 
   render() {
     // hard coded color values have been added below, though they won't be
